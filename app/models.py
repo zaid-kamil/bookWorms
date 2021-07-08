@@ -1,11 +1,11 @@
 from django.db import models
 from django.db.models.deletion import CASCADE
-from django.db.models.fields import BooleanField, CharField, DateTimeField, IntegerField, TextField
+from django.db.models.fields import BooleanField, CharField, DateTimeField, EmailField, IntegerField, TextField
 from django.contrib.auth.models import User
 from django.db.models.fields.files import ImageField
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
-import uuid
-
+from django.core.validators import RegexValidator,MinValueValidator,MaxValueValidator
+from django.utils.translation import gettext_lazy as _
 
 class Genre(models.Model):
     name = models.CharField(max_length=200, help_text='Enter a book genre (e.g. Science Fiction)')
@@ -53,8 +53,6 @@ class Author(models.Model):
     """Model representing an author."""
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    date_of_birth = models.DateField(null=True, blank=True)
-    date_of_death = models.DateField('Died', null=True, blank=True)
 
     class Meta:
         ordering = ['last_name', 'first_name']
@@ -82,3 +80,29 @@ class BookShare(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.id} ({self.book.title})'
+
+
+class Contact(models.Model):
+    """Model definition for Contact."""
+
+    name = CharField(max_length=30)
+    email =EmailField()
+    subject = CharField(max_length=255)
+    messages = TextField()
+    
+    class Meta:
+        """Meta definition for Contact."""
+        verbose_name = 'Contact'
+        verbose_name_plural = 'Contacts'
+
+    def __str__(self):
+        return self.name
+
+class Report(models.Model):
+    class Feedback_options(models.TextChoices):
+        COMPLAIN='CMP',_('complain')
+        REVIEW='REV',_('review')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,)
+    feedbackfor = models.CharField(max_length=15, choices=Feedback_options.choices,default=Feedback_options.REVIEW)
+    message = models.CharField(max_length=100,)
+    rating = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)],help_text="give a rating between 1 to 5")
