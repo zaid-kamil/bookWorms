@@ -8,9 +8,10 @@
         height: 100vh;
              background-size: cover;
         background-repeat: no-repeat;
+        background-color: rgb(216, 222, 228); 
     }
     .wrapper{
-        background-color: rgb(216, 222, 228); 
+        
     }
     .sideimg{
         background-image: url("{% static 'img/bg.jpg' %} ");
@@ -33,9 +34,12 @@
     <div class="row">
         <div class="col-sm-8 col-lg-10 mx-auto">
             <h1 class="text-center my-3">Search result on Book Worm</h1>
+            <p class="lead text-center">
+                results for "{{ term }}" found {{books|length}} book(s)
+            </p>
             <div class="container">
                 <div class="row mt-5">
-                    <div class="col">
+                    <div class="col ">
                         <form class="col-12 col-lg-auto mb-1 mb-lg-0 me-lg-3 card" action="{% url 'book_search' %}">
                             <div class="row">
                                 <input type="search" name="search_box" class="form-control col-9" placeholder="Search..." aria-label="Search">
@@ -50,7 +54,7 @@
                     <div class="col-12 my-1">
                         <div class="row">
                             <div class="col-md-2 ">
-                                <img class="img-thumbnail" src="{{book.image.url}}" alt="">
+                                <img class="img-thumbnail" width="100%" src="{{book.image.url}}" alt="">
                             </div>
                             <div class="col-md-8 card py-2">
                                 <h3>
@@ -64,7 +68,7 @@
                                     {% endif %}
                                         
                                 </h3>
-                                
+                                <b>{{book.display_genre}}</b>
                                 <p>{{book.author}}</p>
                                 <p>
                                     {{book.summary|truncatechars:150}}

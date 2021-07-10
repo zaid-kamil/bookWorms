@@ -41,9 +41,6 @@ class Book(models.Model):
         """String for representing the Model object."""
         return self.title
 
-    def get_absolute_url(self):
-        return reverse('book-detail', args=[str(self.id)])
-
     def display_genre(self):
         """Create a string for the Genre. This is required to display genre in Admin."""
         return ', '.join(genre.name for genre in self.genre.all()[:3])
@@ -58,8 +55,6 @@ class Author(models.Model):
     class Meta:
         ordering = ['last_name', 'first_name']
 
-    def get_absolute_url(self):
-        return reverse('author-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name}'

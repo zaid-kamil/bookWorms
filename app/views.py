@@ -151,7 +151,7 @@ def book_search(request):
         search_query = request.GET.get('search_box',None)       
         if search_query:
             books = Book.objects.filter(title__icontains=search_query).filter(status='a')       
-            ctx = {'books':books,'title':'Book Search'}       
+            ctx = {'books':books,'title':'Book Search','term':search_query}       
             return render(request,'books/book_search.html',context=ctx)       
         else:
             return redirect('book_list')       
