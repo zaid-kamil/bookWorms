@@ -4,9 +4,7 @@ from django.urls import reverse
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 
-# Create your views here.
-def dashboard(request):
-    return render(request, 'users/dashboard.html')
+
 
 def register(request):
     if request.method == 'GET': # agar page open kia aapne

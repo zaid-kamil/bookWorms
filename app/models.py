@@ -3,6 +3,7 @@ from django.db.models.deletion import CASCADE
 from django.db.models.fields import BooleanField, CharField, DateTimeField, EmailField, IntegerField, TextField
 from django.contrib.auth.models import User
 from django.db.models.fields.files import ImageField
+from django.db.models.fields.related import OneToOneField
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
 from django.core.validators import RegexValidator,MinValueValidator,MaxValueValidator
 from django.utils.translation import gettext_lazy as _
@@ -21,7 +22,7 @@ class Book(models.Model):
     )
     user = models.ForeignKey(User,on_delete=CASCADE)
     title = CharField(max_length=255)
-    author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True,blank=True)
     genre = models.ManyToManyField(Genre, help_text='Select a genre for this book')
     summary = TextField(max_length=1000, help_text='Enter a brief description of the book')
     book_state = CharField(max_length=255,default="old")
@@ -106,3 +107,28 @@ class Report(models.Model):
     feedbackfor = models.CharField(max_length=15, choices=Feedback_options.choices,default=Feedback_options.REVIEW)
     message = models.CharField(max_length=100,)
     rating = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)],help_text="give a rating between 1 to 5")
+
+
+
+class Profile(models.Model):
+    GENDER_CHOICES = (
+            ('Male','Male'),
+            ('Female','Female'),
+            ('Others','Others'),
+    )
+    phoneregex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    user = OneToOneField(User, on_delete=models.CASCADE)
+    firstname = models.CharField(max_length = 50)
+    lastname = models.CharField(max_length = 50)
+    email = models.EmailField(max_length = 254)
+    phone = models.CharField(max_length=15, validators=[phoneregex], blank=True)
+    gender = models.CharField(max_length = 50, choices= GENDER_CHOICES)
+    dob = models.DateField(max_length=10)
+    photo = models.ImageField(upload_to = 'profile' )
+    altcontact = models.CharField(max_length = 12)
+    address = models.TextField(max_length =80)
+    city = models.CharField(max_length = 30)
+    pincode = models.IntegerField()
+
+    def __str__(self):
+            return self.user.username
