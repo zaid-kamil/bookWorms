@@ -18,15 +18,19 @@ urlpatterns = [
     path('author/add',views.author_add,name='author_add'),
     
     path('share/<int:pk>/books',views.share_book,name='share_book'),
+    path('share/<int:pk>/books/<int:user_id>/user/',views.share_book_to,name='share_book_to'),
     path('share/<int:pk>/delete',views.share_delete,name='share_delete'),
     path('share/<int:pk>/',views.share_detail,name='share_detail'),
     path('share/',views.share_list,name='share_list'),
 
     path('profile/', views.profileview, name='profile_view'),
+    path('profile/<int:pk>/user', views.profileview_user, name='profile_view_user'),
     path('profile/edit/',views.profile_edit,name='profile_edit'),
 
     path('request/<int:pk>/book',views.request_book,name='request_book'),
     path('request/view',views.request_list,name='request_list'),
+    path('request/<int:pk>/delete',views.delete_request,name='delete_request'),
+
 
 
 ]

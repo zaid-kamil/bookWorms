@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from app.models import Request
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -63,6 +64,21 @@ def profileview(request):
         ctx ={'title':'profile'}
         messages.success(request,'You have not created a profile yet')
         return redirect('profile_edit')
+
+@login_required
+def profileview_user(request,pk):
+    try:
+        profile = Profile.objects.get(user=pk)
+        ctx ={
+            'title':'profile',
+            'profile':profile,
+        }
+        return render(request,'users/view_profile.html',context= ctx)
+    except Exception as e:
+        print(e)
+        messages.error(request,'The user profile does not exist')
+        ctx ={'title':'profile'}
+        return redirect('dashboard')
 
 @login_required
 def profile_edit(request):
@@ -190,6 +206,22 @@ def share_book(request,pk):
     return render(request, 'books/share_book.html', ctx)
 
 @login_required
+def share_book_to(request,pk,user_id):
+    book = get_object_or_404(Book,pk=pk)
+    if request.method == 'POST':
+        form = BookShareForm(request.POST)
+        if form.is_valid():
+            share = form.save(commit=False)       
+            share.user = User.objects.get(pk=user_id)
+            share.save()
+            messages.success(request, 'Book shared successfully')
+            return redirect('book_list',pk=book.pk)
+        else:
+            messages.error(request, 'Error sharing book')
+    ctx = {'book':book,'form':BookShareForm()}
+    return render(request, 'books/share_book.html', ctx)
+
+@login_required
 def share_delete(request,pk):            
     share = get_object_or_404(BookShare,pk=pk)     
     share.delete()     
@@ -211,10 +243,10 @@ def share_list(request):
 @login_required
 def request_book(request,pk):
     book = get_object_or_404(Book,pk=pk)
-    request = Request()
-    request.user = request.user
-    request.book = book
-    request.save()
+    req = Request()
+    req.user = request.user
+    req.book = book
+    req.save()
     messages.success(request, 'Requested book successfully')
     return redirect('book_list')
 
@@ -222,9 +254,16 @@ def request_book(request,pk):
 def request_list(request):       
     try:
         requests = Request.objects.filter(book__user=request.user)       
-        ctx = {'requests':requests,'title':'Book Request List'}       
+        ctx = {'requests':requests,'title':'Book Request List'}
         return render(request,'books/request_list.html',context=ctx)
     except Exception as e:
         print(e)
         messages.error(request, 'Error getting requests')
         return redirect('book_list')     
+
+@login_required
+def delete_request(request,pk):       
+    req = get_object_or_404(Request,pk=pk)       
+    req.delete()            
+    messages.success(request, 'Request deleted successfully')            
+    return redirect('request_list')            

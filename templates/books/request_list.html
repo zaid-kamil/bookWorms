@@ -1,0 +1,90 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+
+{% block css %}
+<style>
+    body{
+        height: 100vh;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    .wrapper{
+        background-color: rgb(216, 222, 228); 
+    }
+    .sideimg{
+        background-image: url("{% static 'img/bg.jpg' %} ");
+        background-position: right;
+        height: 100vh;
+    }
+    .badger{
+        color: gold;
+        font-size: .7rem;
+        border-radius: 10px;
+        background-color: darkblue;
+        padding: 2px .5rem;
+        cursor: pointer;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="container-fluid  wrapper">
+    <div class="row">
+        <div class="col-sm-8 col-lg-10 mx-auto">
+            <h1 class="text-center my-3">Requested Books</h1>
+            <div class="container">
+                <div class="row my-3">
+                    
+                    {% for r in requests %}
+                    
+                    <div class="col-12 my-1">
+                        <div class="row">
+                            <div class="col-md-2 ">
+                                <img class="img-thumbnail" width="100%" src="{{r.book.image.url}}" alt="">
+                            </div>
+                            <div class="col-md-8 card py-2">
+                                <h3>
+                                    <a href="{% url 'book_detail' r.book.id %}">{{r.book.title}}</a>
+                                    
+                                    {% if r.book.is_signed_by_author %}
+                                    <sup class="  badger " title="signed by author">signed</sup>                                       
+                                    {% endif %}
+                                    {% if r.book.is_collection %}
+                                    <sup class="  badger" title="signed by author">collectible</sup>                                       
+                                    {% endif %}
+                                    
+                                </h3>
+                                <b>{{r.book.display_genre}}</b>
+                                <p>{{r.book.author}}</p>
+                                <p>
+                                    {{r.book.summary|truncatechars:150}}
+                                    <a href="{% url 'book_detail' r.book.id %}">more</a>
+                                </p>
+                            </div>
+                            <div class="col-md-2 card  py-2">
+                                <a class="btn btn-primary btn-sm my-1" href="{% url 'book_detail' r.book.id %}" role="button">View <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                <div class="text-center">
+                                    requested by
+                                    <h3>{{r.user.username}}</h3>
+                                </div>
+                                <a class="btn btn-warning btn-sm my-1" href="{% url 'profile_view_user' r.user.id %}" role="button">check profile</a>
+                                <a class="btn btn-danger btn-sm my-1" href="{% url 'delete_request' r.pk %}" role="button">delete request</a>
+                                
+                            </div>
+                        </div>   
+                    </div>
+                    {% empty %}
+                       <div class="col-12">
+                        <h3 class="text-center">No books requested</h3>
+                       </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock content %}

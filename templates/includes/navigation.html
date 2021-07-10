@@ -17,7 +17,10 @@
             </li>       
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'contact' %}">Contact <span class="sr-only">(current)</span></a>
-            </li>         
+            </li>    
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'request_list' %}">Requests <span class="sr-only">(current)</span></a>
+            </li>     
         </ul>
         <div class="ml-md-auto">
             {% if user.is_authenticated  %}

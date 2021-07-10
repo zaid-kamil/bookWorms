@@ -1,0 +1,105 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+
+{% block css %}
+<style>
+    body{
+        height: 100vh;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    .wrapper{
+        background-color: rgb(216, 222, 228); 
+    }
+    .sideimg{
+        background-image: url("{% static 'img/bg.jpg' %} ");
+        background-position: right;
+        height: 100vh;
+    }
+    .badger{
+        color: gold;
+        font-size: .7rem;
+        border-radius: 10px;
+        background-color: darkblue;
+        padding: 2px .5rem;
+        cursor: pointer;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="container-fluid  wrapper">
+    <div class="row">
+        <div class="col-sm-8 col-lg-10 mx-auto">
+            <h1 class="text-center my-3">Requested Books</h1>
+            <div class="container">
+                <div class="row mt-5">
+                    <div class="col">
+                        <form class="col-12 col-lg-auto mb-1 mb-lg-0 me-lg-3 card" action="{% url 'book_search' %}">
+                            <div class="row">
+                                <input type="search" name="search_box" class="form-control col-9" placeholder="Search..." aria-label="Search">
+                                <button class="col-3 btn btn-outline-success my-2 my-sm-0 rounded-0" type="submit">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row my-3">
+                    
+                    {% for r in requests %}
+                    <div class="col-12 my-1">
+                        <div class="row">
+                            <div class="col-md-2 ">
+                                <img class="img-thumbnail" width="100%" src="{{book.image.url}}" alt="">
+                            </div>
+                            <div class="col-md-8 card py-2">
+                                <h3>
+                                    <a href="{% url 'book_detail' book.id %}">{{book.title}}</a>
+                                    
+                                    {% if book.is_signed_by_author %}
+                                    <sup class="  badger " title="signed by author">signed</sup>                                       
+                                    {% endif %}
+                                    {% if book.is_collection %}
+                                    <sup class="  badger" title="signed by author">collectible</sup>                                       
+                                    {% endif %}
+                                    
+                                </h3>
+                                <b>{{book.display_genre}}</b>
+                                <p>{{book.author}}</p>
+                                <p>
+                                    {{book.summary|truncatechars:150}}
+                                    <a href="{% url 'book_detail' book.id %}">more</a>
+                                </p>
+                            </div>
+                            <div class="col-md-2 card  py-2">
+                                <a class="btn btn-primary btn-sm my-1" href="{% url 'book_detail' book.id %}" role="button">View <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                
+                                
+                                {% if user == book.user %}
+                                <a class="btn btn-success btn-sm my-1" href="{% url 'share_book' book.id %}" role="button">Share <i class="fa fa-share" aria-hidden="true"></i></a>
+                                <a class="btn btn-danger btn-sm my-1" href="{% url 'book_delete' book.id %}" role="button"> Delete <i class="fa fa-trash" aria-hidden="true"></i></a>
+                                {% else %}
+                                
+                            </div>
+                        </div>   
+                    </div>
+                    
+                    {% empty %}
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">No books found</h4>
+                                <p class="card-text">Try again later</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock content %}
