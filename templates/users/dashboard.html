@@ -120,6 +120,15 @@
                         </div>
                         
                         <ol class="list-group list-group-numbered mt-1">
+                            
+                            {% if user.is_superuser %}
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold"><a href="{% url 'admin:index' %}">Admin Backend</a></div>
+                                </div>
+                            </li>
+                            {% endif %}
+                                
                             <li class="list-group-item d-flex justify-content-between align-items-start">
                                 <div class="ms-2 me-auto">
                                     <div class="fw-bold"><a href="{% url 'profile_view' %}">View Profile</a></div>

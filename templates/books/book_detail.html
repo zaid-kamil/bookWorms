@@ -95,10 +95,14 @@
 
                                 
                                 {% if user == book.user %}
+                                
+                                {% if book.status == 'a' %}
                                 <a class="btn btn-success btn-sm my-1" href="{% url 'share_book' book.id %}" role="button">Share <i class="fa fa-share" aria-hidden="true"></i></a>
+                                {% endif %}
+                                    
                                 <a class="btn btn-success btn-sm my-1" href="{% url 'book_edit' book.id %}" role="button">Edit <i class="fa fa-pencil" aria-hidden="true"></i></a>
                                 <a class="btn btn-danger btn-sm my-1" href="{% url 'book_delete' book.id %}" role="button"> Delete <i class="fa fa-trash" aria-hidden="true"></i></a>
-                                {% else %}
+                                {% elif book.status == 'a'  %}
                                 <a class="btn btn-info btn-sm my-1" href="{% url 'request_book' book.id %}" role="button">Request <i class="fa fa-inbox" aria-hidden="true"></i></a>
                                 {% endif %}
                                 

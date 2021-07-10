@@ -1,4 +1,4 @@
-from app.models import Author, Book, Contact, Genre, Report, Request
+from app.models import Author, Book, BookShare, Contact, Genre, Report, Request
 from django.contrib import admin
 
 @admin.register(Book)
@@ -14,3 +14,4 @@ admin.site.register(Genre)
 admin.site.register(Contact)
 admin.site.register(Report)
 admin.site.register(Request)
+admin.site.register(BookShare)

@@ -34,6 +34,9 @@ class BookShareForm(ModelForm):
     class Meta:
         model = BookShare
         fields = ('book', 'share_to_user', 'sharing_type', 'due_back')
+        widgets = {
+            'due_back': forms.DateInput(attrs={'class': 'datepicker', 'id': 'data_input','type':'date'})
+        }
         
 
 

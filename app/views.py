@@ -128,7 +128,7 @@ def book_add(request):
 
 @login_required
 def book_list(request):
-    books = Book.objects.all()
+    books = Book.objects.filter(status='a')
     ctx = {'books':books,'title':'Book List'}
     return render(request,'books/book_list.html',context=ctx)
 
@@ -198,8 +198,10 @@ def share_book(request,pk):
             share = form.save(commit=False)       
             share.user = request.user
             share.save()
+            book.status = 's'
+            book.save()
             messages.success(request, 'Book shared successfully')
-            return redirect('book_list',pk=book.pk)
+            return redirect('book_list')
         else:
             messages.error(request, 'Error sharing book')
     ctx = {'book':book,'form':BookShareForm()}
@@ -236,8 +238,9 @@ def share_detail(request,pk):
 
 @login_required
 def share_list(request):
-    shares = BookShare.objects.all()
-    ctx = {'shares':shares,'title':'Book Share List'}
+    shares = BookShare.objects.filter(book__user=request.user)
+    shares2 = BookShare.objects.filter(share_to_user=request.user)
+    ctx = {'shares':shares,'title':'Book Share List','shares2':shares2}
     return render(request,'books/book_share_list.html',context=ctx)
 
 @login_required

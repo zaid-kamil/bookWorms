@@ -12,6 +12,9 @@
     .wrapper{
         background-color: rgb(216, 222, 228); 
     }
+    .wrapper2{
+        background-color: rgb(127, 180, 233); 
+    }
     .sideimg{
         background-image: url("{% static 'img/bg.jpg' %} ");
         background-position: right;
@@ -29,57 +32,126 @@
 {% endblock css %}
 
 {% block content %}
-<div class="container-fluid  wrapper">
+<div class="container-fluid wrapper ">
     <div class="row">
         <div class="col-sm-8 col-lg-10 mx-auto">
-            <h1 class="text-center my-3">Requested Books</h1>
+            <h1 class="text-center my-3">My Shared Books</h1>
             <div class="container">
                 <div class="row mt-5">
                     <div class="col">
-                        <form class="col-12 col-lg-auto mb-1 mb-lg-0 me-lg-3 card" action="{% url 'book_search' %}">
-                            <div class="row">
-                                <input type="search" name="search_box" class="form-control col-9" placeholder="Search..." aria-label="Search">
-                                <button class="col-3 btn btn-outline-success my-2 my-sm-0 rounded-0" type="submit">Search</button>
-                            </div>
-                        </form>
+                        <h1 class="display-4">Shared by Me</h1>
                     </div>
                 </div>
                 <div class="row my-3">
-                    
-                    {% for r in requests %}
+                    {% for r in shares %}
                     <div class="col-12 my-1">
+                        
                         <div class="row">
                             <div class="col-md-2 ">
-                                <img class="img-thumbnail" width="100%" src="{{book.image.url}}" alt="">
+                                <img class="img-thumbnail" width="100%" src="{{r.book.image.url}}" alt="">
                             </div>
                             <div class="col-md-8 card py-2">
                                 <h3>
-                                    <a href="{% url 'book_detail' book.id %}">{{book.title}}</a>
+                                    <a href="{% url 'book_detail' r.book.id %}">{{r.book.title}}</a>
                                     
-                                    {% if book.is_signed_by_author %}
+                                    {% if r.book.is_signed_by_author %}
                                     <sup class="  badger " title="signed by author">signed</sup>                                       
                                     {% endif %}
-                                    {% if book.is_collection %}
+                                    {% if r.book.is_collection %}
                                     <sup class="  badger" title="signed by author">collectible</sup>                                       
                                     {% endif %}
                                     
                                 </h3>
-                                <b>{{book.display_genre}}</b>
-                                <p>{{book.author}}</p>
+                                <b>{{r.book.display_genre}}</b>
+                                <p>{{r.book.author}}</p>
                                 <p>
-                                    {{book.summary|truncatechars:150}}
-                                    <a href="{% url 'book_detail' book.id %}">more</a>
+                                    {{r.book.summary|truncatechars:150}}
+                                    <a href="{% url 'book_detail' r.book.id %}">more</a>
                                 </p>
                             </div>
                             <div class="col-md-2 card  py-2">
-                                <a class="btn btn-primary btn-sm my-1" href="{% url 'book_detail' book.id %}" role="button">View <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                <a class="btn btn-primary btn-sm my-1" href="{% url 'book_detail' r.book.id %}" role="button">View <i class="fa fa-eye" aria-hidden="true"></i></a> 
+                                shared to {{r.share_to_user.username}}
+                                <b>
                                 
-                                
-                                {% if user == book.user %}
-                                <a class="btn btn-success btn-sm my-1" href="{% url 'share_book' book.id %}" role="button">Share <i class="fa fa-share" aria-hidden="true"></i></a>
-                                <a class="btn btn-danger btn-sm my-1" href="{% url 'book_delete' book.id %}" role="button"> Delete <i class="fa fa-trash" aria-hidden="true"></i></a>
+                                {% if r.due_date %}
+                                    for {{r.due_date}}
                                 {% else %}
+                                    permanenetly
+                                {% endif %}
+                                        
                                 
+                                        
+                                </b>
+                            </div>
+                        </div>   
+                    </div>
+                    
+                    {% empty %}
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">No books found</h4>
+                                <p class="card-text">Try again later</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div class="container-fluid wrapper2 ">
+    <div class="row">
+        <div class="col-sm-8 col-lg-10 mx-auto">
+           
+            <div class="container">
+               
+                <div class="row my-3">
+                    <h1 class="display-4">Shared to Me</h1>
+                    {% for r in shares2 %}
+                    <div class="col-12 my-1">
+                       
+                        <div class="row">
+                            <div class="col-md-2 ">
+                                <img class="img-thumbnail" width="100%" src="{{r.book.image.url}}" alt="">
+                            </div>
+                            <div class="col-md-8 card py-2">
+                                <h3>
+                                    <a href="{% url 'book_detail' r.book.id %}">{{r.book.title}}</a>
+                                    
+                                    {% if r.book.is_signed_by_author %}
+                                    <sup class="  badger " title="signed by author">signed</sup>                                       
+                                    {% endif %}
+                                    {% if r.book.is_collection %}
+                                    <sup class="  badger" title="signed by author">collectible</sup>                                       
+                                    {% endif %}
+                                    
+                                </h3>
+                                <b>{{r.book.display_genre}}</b>
+                                <p>{{r.book.author}}</p>
+                                <p>
+                                    {{r.book.summary|truncatechars:150}}
+                                    <a href="{% url 'book_detail' r.book.id %}">more</a>
+                                </p>
+                            </div>
+                            <div class="col-md-2 card  py-2">
+                                <a class="btn btn-primary btn-sm my-1" href="{% url 'book_detail' r.book.id %}" role="button">View <i class="fa fa-eye" aria-hidden="true"></i></a> 
+                                shared to {{r.share_to_user.username}}
+                                <b>
+                                
+                                {% if r.due_date %}
+                                    for {{r.due_date}}
+                                {% else %}
+                                    permanenetly
+                                {% endif %}
+                                        
+                                
+                                        
+                                </b>
                             </div>
                         </div>   
                     </div>
