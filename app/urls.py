@@ -15,7 +15,6 @@ urlpatterns = [
     path('book/<int:pk>/',views.book_detail,name='book_detail'),
     path('book/',views.book_list,name='book_list'),
     path('book/search',views.book_search,name='book_search'),
-
     path('author/add',views.author_add,name='author_add'),
     
     path('share/<int:pk>/books',views.share_book,name='share_book'),
@@ -25,6 +24,9 @@ urlpatterns = [
 
     path('profile/', views.profileview, name='profile_view'),
     path('profile/edit/',views.profile_edit,name='profile_edit'),
+
+    path('request/<int:pk>/book',views.request_book,name='request_book'),
+    path('request/view',views.request_list,name='request_list'),
 
 
 ]

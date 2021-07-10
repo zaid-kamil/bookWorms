@@ -1,3 +1,4 @@
+from app.models import Request
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
@@ -207,7 +208,23 @@ def share_list(request):
     ctx = {'shares':shares,'title':'Book Share List'}
     return render(request,'books/book_share_list.html',context=ctx)
 
+@login_required
+def request_book(request,pk):
+    book = get_object_or_404(Book,pk=pk)
+    request = Request()
+    request.user = request.user
+    request.book = book
+    request.save()
+    messages.success(request, 'Requested book successfully')
+    return redirect('book_list')
 
-
-
-
+@login_required
+def request_list(request):       
+    try:
+        requests = Request.objects.filter(book__user=request.user)       
+        ctx = {'requests':requests,'title':'Book Request List'}       
+        return render(request,'books/request_list.html',context=ctx)
+    except Exception as e:
+        print(e)
+        messages.error(request, 'Error getting requests')
+        return redirect('book_list')     

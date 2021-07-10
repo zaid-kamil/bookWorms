@@ -127,3 +127,16 @@ class Profile(models.Model):
 
     def __str__(self):
             return self.user.username
+
+
+class Request(models.Model):             
+    user = models.ForeignKey(User,on_delete=models.CASCADE)       
+    book = models.ForeignKey(Book,on_delete=models.CASCADE)          
+    date =DateTimeField(auto_now=True)       
+    class Meta:       
+        verbose_name = 'Request'       
+        verbose_name_plural = 'Requests'       
+    def __str__(self):       
+        return self.book.title
+
+    
