@@ -9,11 +9,14 @@ from .forms import *
 def index(request):
     return render(request, 'index.html')
 
-
 @login_required
 def dashboard(request):
-    return render(request, 'users/dashboard.html')
-
+    books = Book.objects.filter(status='a')
+    ctx= {
+        'books': books,
+        'title':'dashboard'
+    }
+    return render(request, 'users/dashboard.html', ctx)     
 
 @login_required
 def contact(request):
@@ -44,7 +47,6 @@ def report(request):
             messages.error(request, 'error saving report')
     ctx = {'form': form,'title': 'Report a Problem'}
     return render(request, 'users/report.html', ctx)
-
 
 @login_required
 def profileview(request):
@@ -91,7 +93,6 @@ def profile_edit(request):
     }
     return render(request,'users/edit_profile.html',context= ctx)
 
-
 @login_required
 def book_add(request):        
     form = BookForm()
@@ -102,17 +103,19 @@ def book_add(request):
             book.user = request.user     
             book.save()     
             messages.success(request,'Book added successfully')     
-            return redirect('book_view')     
+            return redirect('book_list')     
         else:     
             messages.error(request,'Error adding book')     
     ctx = {'form':form,'title':'Add Book'}     
     return render(request,'books/add_book.html',context=ctx)     
 
+@login_required
 def book_list(request):
     books = Book.objects.all()
     ctx = {'books':books,'title':'Book List'}
     return render(request,'books/book_list.html',context=ctx)
 
+@login_required
 def book_edit(request,pk):
     book = get_object_or_404(Book,pk=pk)     
     form = BookForm(instance=book)     
@@ -123,28 +126,31 @@ def book_edit(request,pk):
             book.user = request.user     
             book.save()     
             messages.success(request,'Book updated successfully')     
-            return redirect('book_view')     
+            return redirect('book_list')     
         else:     
             messages.error(request,'Error updating book')     
     ctx = {'form':form,'title':'Edit Book'}     
     return render(request,'books/edit_book.html',context=ctx)
 
+@login_required
 def book_delete(request,pk):     
     book = get_object_or_404(Book,pk=pk)     
     book.delete()     
     messages.success(request,'Book deleted successfully')     
     return redirect('book_list')
 
+@login_required
 def book_detail(request,pk):
     book = get_object_or_404(Book,pk=pk)
     ctx = {'book':book,'title':'Book Detail'}
     return render(request,'books/book_detail.html',context=ctx)
 
+@login_required
 def book_search(request):
     if request.method == 'GET':
         search_query = request.GET.get('search_box',None)       
         if search_query:
-            books = Book.objects.filter(title__icontains=search_query)       
+            books = Book.objects.filter(title__icontains=search_query).filter(status='a')       
             ctx = {'books':books,'title':'Book Search'}       
             return render(request,'books/book_search.html',context=ctx)       
         else:
@@ -152,7 +158,7 @@ def book_search(request):
     else:
         return redirect('book_list')
 
-
+@login_required
 def author_add(request):
     form = AuthorForm()
     if request.method == 'POST':
@@ -166,22 +172,42 @@ def author_add(request):
     ctx = {'form': form,'title': 'Add Author'}
     return render(request, 'books/add_author.html', ctx)
 
-
+@login_required
 def share_book(request,pk):
     book = get_object_or_404(Book,pk=pk)
     if request.method == 'POST':
         form = BookShareForm(request.POST)
         if form.is_valid():
             share = form.save(commit=False)       
-            share.book = book
             share.user = request.user
             share.save()
             messages.success(request, 'Book shared successfully')
-            return redirect('book_view',pk=book.pk)
+            return redirect('book_list',pk=book.pk)
         else:
             messages.error(request, 'Error sharing book')
     ctx = {'book':book,'form':BookShareForm()}
     return render(request, 'books/share_book.html', ctx)
+
+@login_required
+def share_delete(request,pk):            
+    share = get_object_or_404(BookShare,pk=pk)     
+    share.delete()     
+    messages.success(request, 'Book Shared successfully')     
+    return redirect('book_list',pk=share.book.pk)
+
+@login_required
+def share_detail(request,pk):
+    share = get_object_or_404(BookShare,pk=pk)
+    ctx = {'book':share.book,'title':'Book Detail'}
+    return render(request,'books/book_detail.html',context=ctx)
+
+@login_required
+def share_list(request):
+    shares = BookShare.objects.all()
+    ctx = {'shares':shares,'title':'Book Share List'}
+    return render(request,'books/book_share_list.html',context=ctx)
+
+
 
 
 

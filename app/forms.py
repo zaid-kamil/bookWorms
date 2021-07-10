@@ -20,7 +20,7 @@ class ReportForm(ModelForm):
 
 class BookForm(ModelForm):
     class Meta:
-        model : Book
+        model = Book
         fields = ('title', 'author', 'genre', 'summary', 'book_state', 'is_signed_by_author',
                   'is_collection', 'image','image2','image3')
 

@@ -6,8 +6,7 @@
 <style>
     body{
         height: 100vh;
-        background-image: url('http://satyr.io/1000x600/32?text=template');
-        background-size: cover;
+             background-size: cover;
         background-repeat: no-repeat;
     }
     .wrapper{
@@ -25,7 +24,6 @@
         background-color: darkblue;
         padding: 2px .5rem;
         cursor: pointer;
-        
     }
 </style>
 {% endblock css %}
@@ -33,7 +31,8 @@
 {% block content %}
 <div class="container-fluid  wrapper">
     <div class="row">
-        <div class="col-sm-8 col-lg-9">
+        <div class="col-sm-8 col-lg-10 mx-auto">
+            <h1 class="text-center my-3">Books on Book Worm</h1>
             <div class="container">
                 <div class="row mt-5">
                     <div class="col">
@@ -45,7 +44,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="row my-5">
+                <div class="row my-3">
                     
                     {% for book in books %}
                     <div class="col-12 my-1">
@@ -99,61 +98,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4 col-md-4 col-lg-3 sideimg sticky-top sticky-md-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col my-5">
-                        <div class="card mx-auto ">
-                            <div class="card-body">
-                                <h4 class="card-title">Add Your Books</h4>
-                                <p class="card-text">Share your books to world  </p>
-                                <a href="{% url 'book_add' %}" class="card-link">Add <i class="fa fa-plus" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                        <div class="card mx-auto mt-1">
-                            <div class="card-body">
-                                <h4 class="card-title">View Your Books</h4>
-                                <p class="card-text">Check out your content</p>
-                                <a href="{% url 'contact' %}" class="card-link">View <i class="fa fa-list" aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                        
-                        <ol class="list-group list-group-numbered mt-1">
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold">View Profile</div>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold">Edit Profile</div>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold"><a href="{% url 'password_change' %}">Change Passowrd</a></div>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold"><a href="{% url 'logout' %}">Logout</a></div>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold"><a href="{% url 'contact' %}">Contact us</a></div>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold"><a href="{% url 'report' %}">Report</a></div>
-                                </div>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
 
